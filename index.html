@@ -32,10 +32,10 @@
       padding: 0; /* rimuove padding esterno */
     }
 
-    /* Modalità Dislessia: usa OpenDyslexic se disponibile (di sistema o CDN), altrimenti Lexend */
+    /* Modalità Dislessia: usa Arial, Helvetica, sans-serif */
     body.dyslexia-mode,
     body.dyslexia-mode * {
-      font-family: 'OpenDyslexic', 'Lexend', Arial, Verdana, sans-serif !important;
+      font-family: Arial, Helvetica, sans-serif !important;
       letter-spacing: 0.02em;
       line-height: 1.5;
     }
@@ -47,7 +47,7 @@
     body.dyslexia-mode #story-text,
     body.dyslexia-mode .door-label,
     body.dyslexia-mode #top-bar .bar-right > * {
-      font-family: 'OpenDyslexic', 'Lexend', Arial, Verdana, sans-serif !important;
+      font-family: Arial, Helvetica, sans-serif !important;
     }
     body.dyslexia-mode #story-text { font-style: normal; text-shadow: none; letter-spacing: 0.02em; }
 
@@ -360,7 +360,7 @@
       border: 2px solid #654321;
       background-color: var(--parchment); /* stesso colore della pergamena */
       cursor: pointer;
-      font-size: 14px;
+      font-size: 18px;
       min-width: 60px;
       pointer-events: auto;
       box-shadow: none;
@@ -402,6 +402,13 @@
       transform: translateY(-35%) rotate(90deg);
     }
     .door .door-label { display: inline-block; white-space: nowrap; pointer-events: none; }
+    /* Porte: stile "come le descrizioni" quando NON in modalità Accessibilità */
+    body:not(.dyslexia-mode) .door .door-label {
+      font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+      font-style: italic;
+      letter-spacing: 0.3px;
+      text-shadow: 0.5px 0.5px 2px rgba(0,0,0,0.15);
+    }
     .door.east .door-label, .door.west .door-label {
       transform: rotate(-90deg);
       white-space: normal;      /* permetti a capo */
