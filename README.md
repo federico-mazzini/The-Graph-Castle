@@ -22,47 +22,6 @@ Il saggio **Edsger** deve trovare una **fessura nel muro** del castello, unico p
 Di giorno può muoversi liberamente, ma di notte deve attraversare il minor numero possibile di stanze per non farsi scoprire dalle guardie.  
 Ogni stanza nasconde oggetti o indizi che aiutano a ricostruire la verità sul regno e sul misterioso segreto della corona.
 
-## Funzionalità principali
-
-- Navigazione tra stanze (Nord, Sud, Est, Ovest)
-- Descrizione dinamica dell’ambiente corrente
-- “Mappa magica” che si aggiorna in tempo reale mostrando nodi e collegamenti visitati
-- Contatore dei passi e del cammino compiuto
-- Popup e interazioni (es. scoperta della fessura o oggetti nascosti)
-- Accessibilità e interfaccia responsive
-- Modalità “notturna” per la fase stealth del gioco
-
-## Struttura del progetto
-
-```
-code/
- ├── index.html        # Struttura principale del gioco
- ├── style.css         # Stile e layout delle stanze e dell’interfaccia
- ├── script.js         # Logica del gioco e gestione della mappa
- ├── assets/           # Immagini, icone e risorse grafiche
- └── README.md         # Documentazione del progetto
-```
-
-## Installazione e uso
-
-Puoi eseguirlo direttamente in locale:
-1. Clona la repository
-   ```bash
-   git clone https://github.com/fedemazzini/graph-castle.git
-   cd graph-castle
-   ```
-2. Apri `index.html` con un browser
-
-Oppure esploralo online tramite GitHub Pages:
-https://fedemazzini.github.io/graph-castle/
-
-## Obiettivi futuri
-
-- Implementare la visualizzazione animata degli algoritmi di visita (DFS/BFS)
-- Aggiungere modalità “sfida” per risolvere enigmi basati sui percorsi
-- Integrare suoni ambientali e narrazione audio
-- Creare un livello editor per disegnare nuovi castelli
-
 ## Autore
 
 Progetto sviluppato da **Federico Mazzini**, docente di informatica e ingegnere informatico, nell’ambito del percorso abilitante per l’insegnamento (PF60 – Università di Bologna).  
