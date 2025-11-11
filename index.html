@@ -246,6 +246,17 @@
       text-shadow: 0.5px 0.5px 2px rgba(0,0,0,0.15);
       margin: 0;
     }
+
+    .map-note {
+      font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+      font-size: 16px;
+      font-style: italic;
+      color: #2b1e17;
+      line-height: 1.5;
+      letter-spacing: 0.3px;
+      text-shadow: 0.5px 0.5px 2px rgba(0,0,0,0.15);
+      margin: -2px 0 0;
+    }
     #right-pane .room-info .meta { 
         display: flex; align-items: center; gap: 12px; margin-top: 8px; 
         transform: translate(-50px, -50px); /* sposta la mappa leggermente a sinistra e verso l'alto */
@@ -253,7 +264,7 @@
 
     #right-pane .map-area { flex: 0 1 75%; display: flex; flex-direction: column; min-height: 0;
       padding-left: 20px; /* sposta la mappa leggermente a sinistra */
-      transform: translate(-12px, -50px); /* sposta la mappa leggermente a sinistra e verso l'alto */
+      transform: translate(-12px, -60px); /* sposta la mappa leggermente a sinistra e verso l'alto */
     }
     #right-pane .map-area h2 { margin: 10px 0 6px; }
     #right-pane .map-area svg { width: 100%; height: 100%; display: block; }
@@ -586,6 +597,7 @@ Ogni movimento, decidere il destino del regno.
       </div>
       <div class="map-area">
         <h2>Mappa magica</h2>
+        <p class="map-note">I nodi della mappa possono essere mossi a piacimento dal saggio: la mappa si plasma secondo la sua volontà.</p>
         <svg id="mappa-magica"></svg>
       </div>
     </div>
