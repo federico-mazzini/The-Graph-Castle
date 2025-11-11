@@ -132,6 +132,8 @@
       letter-spacing: 0.3px;
       text-shadow: 0.5px 0.5px 2px rgba(0,0,0,0.15);
       margin: 0;
+      text-align: justify;
+      margin-right: 15px;
     }
     .extra-btn {
       padding: 6px 12px;
@@ -264,10 +266,16 @@
 
     #right-pane .map-area { flex: 0 1 75%; display: flex; flex-direction: column; min-height: 0;
       padding-left: 20px; /* sposta la mappa leggermente a sinistra */
-      transform: translate(-12px, -60px); /* sposta la mappa leggermente a sinistra e verso l'alto */
+      transform: translate(-12px, 0px); /* sposta la mappa leggermente a sinistra */
     }
     #right-pane .map-area h2 { margin: 10px 0 6px; }
     #right-pane .map-area svg { width: 100%; height: 100%; display: block; }
+    #mappa-magica { overflow: visible; }
+    /* Abbassa solo il grafico (non i titoli/descrizioni) */
+    #right-pane .map-area svg#mappa-magica {
+      margin-top: 14px;              /* abbassa leggermente la mappa */
+      height: calc(100% - 14px);     /* mantiene l’altezza totale coerente */
+    }
     /* Drag nodi mappa */
     #mappa-magica .draggable { cursor: grab; }
     #mappa-magica .dragging  { cursor: grabbing; }
@@ -484,10 +492,33 @@
       animation: windowPulse 1.6s ease-in-out infinite;
       cursor: pointer;
       transition: transform 0.2s ease, filter 0.2s ease;
+      z-index: 20;
+      pointer-events: auto;
     }
 
     .room-window:hover {
       filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)) brightness(1.1);
+    }
+
+    /* Pergamena decorativa vicino alla fessura (solo Livello 2) */
+    .room-scroll {
+      position: absolute;
+      font-size: 36px;
+      line-height: 1;
+      pointer-events: none; /* non blocca il click sulla fessura */
+      z-index: 18; /* sotto la fessura (z=20) ma sopra il pavimento */
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.35));
+      user-select: none;
+    }
+
+    /* In Livello 2 (dark), pulsa la pergamena e NON il buco */
+    body.dark-mode .room-window { animation: none !important; pointer-events: none; cursor: default; }
+    body.dark-mode .room-scroll { animation: scrollPulse 1.6s ease-in-out infinite; pointer-events: auto; cursor: pointer; }
+
+    @keyframes scrollPulse {
+      0%   { transform: rotate(-10deg) scale(1);   opacity: 0.9; }
+      50%  { transform: rotate(-10deg) scale(1.15); opacity: 1; }
+      100% { transform: rotate(-10deg) scale(1);   opacity: 0.9; }
     }
 
     @keyframes windowPulse {
@@ -549,6 +580,66 @@
     .popup-fessura button:hover {
       background-color: #f0e0b0;
     }
+
+    /* Popup in dark mode */
+    body.dark-mode .popup-fessura .popup-content {
+      background-color: var(--panel);
+      color: var(--fg);
+      border-color: var(--fg);
+      box-shadow: 0 4px 12px rgba(255,255,255,0.07);
+    }
+    body.dark-mode .popup-fessura button {
+      background-color: var(--panel);
+      color: var(--fg);
+      border-color: var(--fg);
+    }
+    body.dark-mode .popup-fessura button:hover {
+      background-color: #1e1e1e;
+    }
+
+    #level2-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--parchment);
+      border: 3px solid #000;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-family: 'Cinzel Decorative', 'UnifrakturCook', serif;
+      font-size: 16px;
+      cursor: default;
+      pointer-events: none;
+      opacity: 0.6;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      z-index: 2100;
+      display: none;
+    }
+
+    #level2-btn:hover {
+      background-color: #f0e0b0;
+    }
+    /* ===== DARK MODE ===== */
+    body.dark-mode { --bg:#0f0f10; --fg:#eaeaea; --muted:#bdbdbd; --panel:#171717; --accent:#FFD700; --border:#555; }
+    body.dark-mode { background-color: var(--bg); color: var(--fg); }
+    body.dark-mode h1 { color: var(--fg); text-shadow: none; }
+    body.dark-mode #top-bar { border-color: var(--fg); box-shadow: inset 0 0 0 2px rgba(255,255,255,0.08); }
+    body.dark-mode #story-title { color: var(--fg); }
+    body.dark-mode #story-text { color: var(--fg); text-shadow: none; }
+    body.dark-mode #right-pane .room-info p { color: var(--fg); text-shadow: none; }
+    body.dark-mode .map-note { color: var(--muted); text-shadow: none; }
+    body.dark-mode #room-box { border-color: var(--fg); }
+    body.dark-mode #room-box h2 { color: var(--fg); opacity: 0.6; }
+    body.dark-mode #room-box p { color: var(--muted); }
+    body.dark-mode #top-bar .bar-right > *,
+    body.dark-mode .bag-btn,
+    body.dark-mode #back-btn,
+    body.dark-mode .collect-btn,
+    body.dark-mode .extra-btn,
+    body.dark-mode .door { background-color: var(--panel); color: var(--fg); border-color: var(--border); }
+    body.dark-mode #level2-btn { background-color: var(--panel); color: var(--fg); border-color: var(--fg); }
+    body.dark-mode #mappa-magica text { fill: var(--fg) !important; }
+    body.dark-mode #mappa-magica .edge { stroke: #aaa !important; }
+body.dark-mode #mappa-magica circle { stroke: #ccc; }
   </style>
 </head>
 <body>
@@ -603,6 +694,19 @@ Ogni movimento, decidere il destino del regno.
     </div>
   </div>
 
+  <button id="level2-btn">Vai al livello 2</button>
+  <div id="popup-fessura" class="hidden popup-fessura">
+    <div class="popup-content">
+      <p id="popup-text"></p>
+      <button id="popup-close">Chiudi</button>
+    </div>
+  </div>
+  <div id="popup-lose" class="hidden popup-fessura">
+    <div class="popup-content">
+      <p id="popup-lose-text"></p>
+      <button id="popup-lose-retry">Riprova</button>
+    </div>
+  </div>
   <script>
     // Funzione helper per direzioni opposte
     const opposto = {
@@ -611,6 +715,10 @@ Ogni movimento, decidere il destino del regno.
       east: "west",
       west: "east"
     };
+
+    // Regole Livello 2 (notte)
+    const LIVELLO2_TARGET = 'stanza20';      // Sala della Perla
+    const LIVELLO2_MAX_DIST = 4;             // massimo 8 passi di distanza dalla stanza20 (BFS)
 
     // Calcola lo spawn vicino alla porta di ingresso nella stanza di arrivo
     function getSpawnPos(entrySide) {
@@ -655,7 +763,7 @@ Ogni movimento, decidere il destino del regno.
       },
       "stanza8": { descrizione: "Sala delle Foglie, foglie secche coprono il pavimento. Una lanterna spezzata giace accanto a una finestra murata: un messaggio del passato.", collegamenti: [{ direzione: "south", destinazione: "stanza12" }, { direzione: "east", destinazione: "stanza14" }] },
       "stanza9": { descrizione: "Sala delle Vecchie Noci, l’odore dolce e antico del legno riempie l’aria. Qui tutto tace, come se il castello stesso trattenesse il respiro.", collegamenti: [] },
-      "stanza10": { descrizione: "Corridoio dei Quadri, ritratti dei nobili osservano il saggio mentre passa. Gli occhi sembrano seguire ogni suo movimento.", collegamenti: [{ direzione: "west", destinazione: "stanza5" }, { direzione: "south", destinazione: "stanza14" }, { direzione: "east", destinazione: "stanza19" }] },
+      "stanza10": { descrizione: "Corridoio dei Quadri, ritratti dei nobili osservano il saggio mentre passa. Gli occhi sembrano seguire ogni suo movimento.", collegamenti: [{ direzione: "west", destinazione: "stanza5" }, { direzione: "south", destinazione: "stanza14" }] },
       "stanza11": {
         descrizione: "Sala degli Specchi, riflessi infiniti confondono il senso dello spazio. Tra le cornici d’argento brilla una piccola gemma dimenticata.",
         collegamenti: [
@@ -668,9 +776,9 @@ Ogni movimento, decidere il destino del regno.
       "stanza14": { descrizione: "Sala degli Astri, il soffitto brilla di funghi bioluminescenti. Ogni luce forma una costellazione che ricorda il disegno di un piccione in volo.", collegamenti: [{ direzione: "north", destinazione: "stanza10" }, { direzione: "south", destinazione: "stanza17" }] },
       "stanza15": { descrizione: "Balcone delle Statue, da qui il castello domina la valle. Statue di pietra sorvegliano in silenzio; una di loro tiene in mano una piuma scolpita.", collegamenti: [] },
       "stanza16": { descrizione: "Sala Giravolta, passaggi stretti e curve improvvise. Ogni angolo nasconde un’eco che ti riporta alla tua ultima scelta.", collegamenti: [{ direzione: "east", destinazione: "stanza19" }, { direzione: "west", destinazione: "stanza14" }] },
-      "stanza17": { descrizione: "Sala del Canto, le pareti vibrano di una melodia leggera. Sul pavimento giace una vera piuma — bianca, sottile, immacolata.", collegamenti: [{ direzione: "north", destinazione: "stanza14" }, { direzione: "south", destinazione: "stanza19" }, { direzione: "east", destinazione: "stanza18" }] },
+      "stanza17": { descrizione: "Sala del Canto, le pareti vibrano di una melodia leggera. Sul pavimento giace una vera piuma — bianca, sottile, immacolata.", collegamenti: [{ direzione: "north", destinazione: "stanza14" }, { direzione: "east", destinazione: "stanza18" }] },
       "stanza18": { descrizione: "Stanza dei Rami, le crepe sui muri sono coperte da disegni di alberi intrecciati. Qualcuno ha inciso parole ormai indecifrabili.", collegamenti: [] },
-      "stanza19": { descrizione: "Sala delle Caramelle, profumo dolce si libera nell'aria. In un angolo, minuscole briciole di zucchero formano una freccia verso est.", collegamenti: [{ direzione: "east", destinazione: "stanza20" }, { direzione: "west", destinazione: "stanza10" }, { direzione: "north", destinazione: "stanza17" }] },
+      "stanza19": { descrizione: "Sala delle Caramelle, profumo dolce si libera nell'aria. In un angolo, minuscole briciole di zucchero formano una freccia verso est.", collegamenti: [{ direzione: "east", destinazione: "stanza20" }] },
       "stanza20": { descrizione: "Sala della Perla, una stanza silenziosa e priva di finestre. Solo una piccola fessura nel muro lascia filtrare la luce, è l’unico passaggio per il piccione viaggiatore. Qui il saggio Edsger dovrà deporre il lupino e attendere la pergamena", collegamenti: [] }
     };
 
@@ -762,6 +870,9 @@ Ogni movimento, decidere il destino del regno.
         // Rimuovi eventuali finestrelle precedenti
         const oldWindow = box.querySelector('.room-window');
         if (oldWindow) oldWindow.remove();
+        // Rimuovi eventuale pergamena precedente
+        const oldScroll = box.querySelector('.room-scroll');
+        if (oldScroll) oldScroll.remove();
 
         const windowEl = document.createElement('div');
         windowEl.className = 'room-window';
@@ -771,24 +882,77 @@ Ogni movimento, decidere il destino del regno.
         windowEl.style.top = '20%';   // centrata verticalmente
         windowEl.style.right = '-5.5%';  // adiacente al muro destro
         windowEl.style.transform = 'rotate(90deg)';
-        // windowEl.style.pointerEvents = 'none'; // <-- pointerEvents abilitato
         windowEl.style.opacity = '0.9';
         windowEl.style.filter = 'drop-shadow(2px 2px 3px rgba(0,0,0,0.4))';
-        // Listener click sulla finestrella
-        windowEl.addEventListener('click', () => {
+        // Accessibilità per la finestrella
+        windowEl.setAttribute('role', 'button');
+        windowEl.setAttribute('tabindex', '0');
+        windowEl.setAttribute('aria-label', 'Fessura nel muro');
+        // Listener click/tastiera accessibile sulla finestrella
+        const triggerPopup = () => {
           const popup = document.getElementById('popup-fessura');
           const popupText = document.getElementById('popup-text');
           const popupClose = document.getElementById('popup-close');
-          popupText.textContent = `Hai trovato la fessura! Numero di stanze attraversate: ${passi}`;
+          const inDark = document.body.classList.contains('dark-mode');
+
+          if (inDark) {
+            // Livello 2: messaggio di vittoria
+            popupText.textContent = 'Il saggio Edsger ha raggiunto la sala della perla senza farsi scoprire e ha trovato la pergamena! Il regno è salvo!';
+            if (typeof setDarkMode === 'function') setDarkMode(true); // resta in dark
+          } else {
+            // Livello 1: messaggio originale e attiva il bottone per passare al Livello 2
+            popupText.textContent = `Hai trovato la fessura! Numero di stanze attraversate: ${passi}`;
+            const levelBtn = document.getElementById('level2-btn');
+            if (levelBtn) {
+              levelBtn.style.display = 'block';
+              levelBtn.textContent = 'Vai al livello 2';
+              levelBtn.style.pointerEvents = 'auto';
+              levelBtn.style.cursor = 'pointer';
+              levelBtn.style.opacity = '1';
+            }
+          }
+
           popup.classList.remove('hidden');
           popupClose.onclick = () => popup.classList.add('hidden');
-        });
+        };
+
+        if (!document.body.classList.contains('dark-mode')) {
+          windowEl.addEventListener('click', (e) => { e.stopPropagation(); triggerPopup(); });
+          windowEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); triggerPopup(); }
+          });
+        }
         box.appendChild(windowEl);
+
+        // Inserisci la pergamena decorativa SOLO in dark mode (Livello 2)
+        if (document.body.classList.contains('dark-mode')) {
+          const scrollEl = document.createElement('div');
+          scrollEl.className = 'room-scroll';
+          scrollEl.textContent = '📜';
+          scrollEl.title = 'Pergamena';
+          // accessibilità
+          scrollEl.setAttribute('role', 'button');
+          scrollEl.setAttribute('tabindex', '0');
+          scrollEl.setAttribute('aria-label', 'Pergamena');
+          // posizionamento vicino alla fessura (muro destro), leggermente più in basso e verso l'interno
+          scrollEl.style.top = '28%';
+          scrollEl.style.right = '6%';
+          scrollEl.style.transform = 'rotate(-10deg)';
+          // listener: in Livello 2 la pergamena mostra il popup di vittoria
+          scrollEl.addEventListener('click', (e) => { e.stopPropagation(); triggerPopup(); });
+          scrollEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); triggerPopup(); }
+          });
+          box.appendChild(scrollEl);
+        }
       } else {
         // Rimuovi la finestrella se si esce dalla stanza
         const box = document.getElementById('room-box');
         const oldWindow = box.querySelector('.room-window');
         if (oldWindow) oldWindow.remove();
+        // Rimuovi anche la pergamena se presente
+        const oldScroll2 = box.querySelector('.room-scroll');
+        if (oldScroll2) oldScroll2.remove();
       }
 
       // Se in questa stanza non esiste alcun oggetto previsto, non mostrare nulla
@@ -870,15 +1034,68 @@ Ogni movimento, decidere il destino del regno.
       return distanze;
     }
 
+    // Calcola le distanze BFS da una stanza generica
+    function calcolaDistanzeDa(startId) {
+      const dist = {};
+      const q = [startId];
+      dist[startId] = 0;
+      while (q.length) {
+        const u = q.shift();
+        (grafo[u]?.collegamenti || []).forEach(col => {
+          if (!(col.destinazione in dist)) {
+            dist[col.destinazione] = dist[u] + 1;
+            q.push(col.destinazione);
+          }
+        });
+      }
+      return dist; // nodi non raggiunti: dist[nodo] === undefined
+    }
+
+    // Calcola le distanze BFS limitandosi ai nodi "visibili" (già visitati)
+    function calcolaDistanzeVisibiliDa(startId, visSet) {
+      const dist = {};
+      if (!visSet || !visSet.has(startId)) {
+        // se lo start non è ancora visibile, non possiamo ragionare
+        return dist;
+      }
+      const q = [startId];
+      dist[startId] = 0;
+      while (q.length) {
+        const u = q.shift();
+        (grafo[u]?.collegamenti || []).forEach(col => {
+          const v = col.destinazione;
+          if (!visSet.has(v)) return; // ignora nodi non ancora visibili
+          if (!(v in dist)) {
+            dist[v] = dist[u] + 1;
+            q.push(v);
+          }
+        });
+      }
+      return dist;
+    }
+
+    function mostraSconfittaLivello2() {
+      const popup = document.getElementById('popup-lose');
+      const text = document.getElementById('popup-lose-text');
+      const btn = document.getElementById('popup-lose-retry');
+      if (!popup || !text || !btn) return;
+      text.textContent = 'Ti sei allontanato troppo dalla Sala della Perla. Le guardie ti hanno scoperto!';
+      popup.classList.remove('hidden');
+      btn.onclick = () => {
+        popup.classList.add('hidden');
+        resetGame(true); // riparti dal Livello 2, atrio, mappa vuota
+      };
+    }
+
     disegnaMappaBase();
+
 
 let nodoCorrente = "stanza1";
 let passi = 0;
 let cammino = [nodoCorrente];
 let percorso = [nodoCorrente]; // timeline completa dei movimenti (con duplicati)
 
-const backBtn = document.getElementById("back-btn");
-backBtn.addEventListener("click", () => {
+function resetGame(keepDark = false) {
   // Reset stato di gioco
   nodoCorrente = "stanza1";
   passi = 0;
@@ -886,7 +1103,7 @@ backBtn.addEventListener("click", () => {
   percorso = [nodoCorrente];
   document.getElementById("passi").textContent = passi;
 
-  // Reset posizioni mappa (niente override manuali, niente layout precedente)
+  // Reset posizioni mappa
   window.manualNodePos = {};
   window.layoutPos = {};
 
@@ -905,10 +1122,36 @@ backBtn.addEventListener("click", () => {
   omino.style.transform = `translate(calc(-50% + ${ominoPos.x}px), calc(-50% + ${ominoPos.y}px))`;
   spawnGraceUntil = Date.now() + 500;
 
-  // Ricrea da zero la mappa con solo l'Atrio visibile
+  // Tema (Livello 2 = dark)
+  if (typeof setDarkMode === 'function') setDarkMode(!!keepDark);
+
+  // Ricrea mappa e UI
   disegnaMappaBase();
   aggiornaStanza();
   aggiornaMappa();
+
+  // Stato del bottone livello
+  const levelBtn = document.getElementById('level2-btn');
+  if (levelBtn) {
+    levelBtn.style.display = 'block';
+    if (keepDark) {
+      levelBtn.textContent = 'Livello 2';
+      levelBtn.style.pointerEvents = 'none';
+      levelBtn.style.cursor = 'default';
+      levelBtn.style.opacity = '1';
+    } else {
+      levelBtn.textContent = 'Livello 1';
+      levelBtn.style.pointerEvents = 'none';
+      levelBtn.style.cursor = 'default';
+      levelBtn.style.opacity = '0.6';
+    }
+  }
+}
+
+const backBtn = document.getElementById("back-btn");
+backBtn.addEventListener("click", () => {
+  const inDark = document.body.classList.contains('dark-mode');
+  resetGame(inDark);
 });
 
 const bagBtn = document.getElementById('bag-btn');
@@ -944,7 +1187,26 @@ if (dysBtn) {
     try { localStorage.setItem(DYSLEXIA_KEY, on ? '1' : '0'); } catch(_) {}
   });
 }
+
 try { applyDyslexiaMode(localStorage.getItem(DYSLEXIA_KEY) === '1'); } catch(_) { applyDyslexiaMode(false); }
+
+  // --- Dark Mode controller ---
+  function setDarkMode(on) {
+    document.body.classList.toggle('dark-mode', on);
+    // Adjust SVG colors to match theme
+    const texts = document.querySelectorAll('#mappa-magica text');
+    texts.forEach(t => t.setAttribute('fill', on ? '#eaeaea' : '#333'));
+    const edges = document.querySelectorAll('#mappa-magica path.edge');
+    edges.forEach(e => e.setAttribute('stroke', on ? '#aaa' : '#666'));
+    const circles = document.querySelectorAll('#mappa-magica circle');
+    circles.forEach(c => {
+      const isCurrent = c.getAttribute('data-current') === '1';
+      if (!isCurrent) {
+        c.style.stroke = '';
+        c.setAttribute('stroke', on ? '#ccc' : '#333');
+      }
+    });
+  }
 
     function nomeStanza(nodoId) {
       if (grafo[nodoId] && grafo[nodoId].descrizione) {
@@ -1070,11 +1332,12 @@ try { applyDyslexiaMode(localStorage.getItem(DYSLEXIA_KEY) === '1'); } catch(_) 
       const nodoIniziale = document.getElementById("node-stanza1");
       const labelIniziale = document.getElementById("label-stanza1");
       if (nodoIniziale && labelIniziale) {
-        nodoIniziale.setAttribute("opacity", "1");
-        labelIniziale.setAttribute("opacity", "1");
-        nodoIniziale.setAttribute("fill", "none");
-        nodoIniziale.setAttribute("stroke", "#FFD700");
-        nodoIniziale.setAttribute("stroke-width", "3");
+        nodoIniziale.setAttribute('opacity', '1');
+        labelIniziale.setAttribute('opacity', '1');
+        nodoIniziale.setAttribute('fill', 'none');
+        nodoIniziale.setAttribute('data-current', '1');
+        nodoIniziale.style.stroke = '#FFD700';
+        nodoIniziale.setAttribute('stroke-width', '3');
       }
     }
 
@@ -1198,14 +1461,16 @@ document.addEventListener('pointerup',   endDrag);
       const layer = document.getElementById('map-layer');
       if (!svg || !layer) return;
       const viewW = 1000, viewH = 600;
-      const marginX = 40, marginTop = 20, marginBottom = 24;
+      const marginX = 10, marginTop = 10, marginBottom = 10;
+      const NODE_PAD = 48; // padding intorno a ciascun nodo per evitare tagli (raggio + emoji)
       let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
       Object.values(pos).forEach(p => {
         if (!p) return;
-        if (p.x < minX) minX = p.x;
-        if (p.y < minY) minY = p.y;
-        if (p.x > maxX) maxX = p.x;
-        if (p.y > maxY) maxY = p.y;
+        // considera il bordo del cerchio + l'emoji per non tagliare i nodi
+        if (p.x - NODE_PAD < minX) minX = p.x - NODE_PAD;
+        if (p.y - NODE_PAD < minY) minY = p.y - NODE_PAD;
+        if (p.x + NODE_PAD > maxX) maxX = p.x + NODE_PAD;
+        if (p.y + NODE_PAD > maxY) maxY = p.y + NODE_PAD;
       });
       if (!isFinite(minX) || !isFinite(minY) || !isFinite(maxX) || !isFinite(maxY)) return;
       const w = Math.max(1, maxX - minX);
@@ -1228,10 +1493,11 @@ document.addEventListener('pointerup',   endDrag);
         const nAtrio = document.getElementById("node-stanza1");
         const lAtrio = document.getElementById("label-stanza1");
         if (nAtrio) {
-            nAtrio.setAttribute("opacity", "1");
-            nAtrio.setAttribute("fill", "none");
-            nAtrio.setAttribute("stroke", "#FFD700");
-            nAtrio.setAttribute("stroke-width", "3");
+            nAtrio.setAttribute('opacity', '1');
+            nAtrio.setAttribute('fill', 'none');
+            nAtrio.setAttribute('data-current', '1');
+            nAtrio.style.stroke = '#FFD700';
+            nAtrio.setAttribute('stroke-width', '3');
         }
         if (lAtrio) lAtrio.setAttribute("opacity", "1");
         return;
@@ -1275,20 +1541,30 @@ document.addEventListener('pointerup',   endDrag);
       // (Niente corridoi, niente collision-fix: l'utente sposta i nodi a mano)
 
       // --- Aggiorna posizione, colore e visibilità dei nodi ---
+      const dark = document.body.classList.contains('dark-mode');
       Object.keys(grafo).forEach(id => {
         const node = document.getElementById(`node-${id}`);
         const label = document.getElementById(`label-${id}`);
         if (node && pos[id]) {
-          node.setAttribute("opacity", "1");
-          if (label) label.setAttribute("opacity", "1");
-          node.setAttribute("fill", "none");
-          node.setAttribute("stroke", id === nodoCorrente ? "#FFD700" : "#333");
-          node.setAttribute("stroke-width", id === nodoCorrente ? "3" : "2");
-          node.setAttribute("cx", pos[id].x);
-          node.setAttribute("cy", pos[id].y);
+          node.setAttribute('opacity', '1');
+          if (label) label.setAttribute('opacity', '1');
+          node.setAttribute('fill', 'none');
+          if (id === nodoCorrente) {
+            node.setAttribute('data-current', '1');
+            node.style.stroke = '#FFD700';
+            node.setAttribute('stroke', '#FFD700');
+          } else {
+            node.removeAttribute('data-current');
+            node.style.stroke = '';
+            node.setAttribute('stroke', dark ? '#ccc' : '#333');
+          }
+          node.setAttribute('stroke-width', id === nodoCorrente ? '3' : '2');
+          node.setAttribute('cx', pos[id].x);
+          node.setAttribute('cy', pos[id].y);
           if (label) {
-            label.setAttribute("x", pos[id].x);
-            label.setAttribute("y", pos[id].y + 8);
+            label.setAttribute('x', pos[id].x);
+            label.setAttribute('y', pos[id].y + 8);
+            label.setAttribute('fill', dark ? '#eaeaea' : '#333');
           }
         }
       });
@@ -1304,6 +1580,7 @@ document.addEventListener('pointerup',   endDrag);
         const edge = document.getElementById(`edge-${key}`);
         if (edge && pos[da] && pos[a]) {
           edge.setAttribute("opacity", "1");
+          edge.setAttribute('stroke', dark ? '#aaa' : '#666');
           const d = curvedPathBetween(da, a, pos, 0);
           if (d) edge.setAttribute('d', d);
         }
@@ -1318,6 +1595,7 @@ document.addEventListener('pointerup',   endDrag);
       const titleEl = document.getElementById("stanza-title");
       const infoTitleEl = document.getElementById("info-title");
       const infoDescEl = document.getElementById("info-desc");
+      const dark = document.body.classList.contains('dark-mode');
 
       if (titleEl) titleEl.textContent = nomeStanza(nodoCorrente);
       if (infoTitleEl) infoTitleEl.textContent = nomeStanza(nodoCorrente);
@@ -1364,8 +1642,8 @@ document.addEventListener('pointerup',   endDrag);
           btn.style.transform = "translateX(-50%)";
         } else {
           // porte normali: solo testo del nome stanza, nessuna icona
-          btn.style.backgroundColor = "var(--parchment)";
-          btn.style.borderColor = visited ? "#FFD700" : "#654321";
+          btn.style.backgroundColor = dark ? "var(--panel)" : "var(--parchment)";
+          btn.style.borderColor = visited ? "#FFD700" : (dark ? "var(--border)" : "#654321");
           btn.textContent = "";
           const lbl = document.createElement('span');
           lbl.className = 'door-label';
@@ -1393,8 +1671,26 @@ document.addEventListener('pointerup',   endDrag);
           }
         }
         btn.addEventListener("click", () => {
+          const destinazione = col.destinazione;
+          const inDark = document.body.classList.contains('dark-mode');
+
+          // In Livello 2 (notte), perde se la profondità BFS dall'Atrio supera 4
+          if (inDark) {
+            // Considera solo la mappa VISIBILE finora (nodi toccati) + la destinazione (la porta è visibile)
+            const visSet = new Set(percorso);
+            visSet.add(nodoCorrente);
+            visSet.add(destinazione);
+            const distMap = calcolaDistanzeVisibiliDa('stanza1', visSet);
+            const distFromAtrio = distMap[destinazione];
+            if (distFromAtrio === undefined || distFromAtrio >= LIVELLO2_MAX_DIST) {
+              mostraSconfittaLivello2();
+              return; // non aggiornare lo stato né muovere l'omino
+            }
+          }
+
+          // Procedi con il movimento (valido)
           const precedente = cammino[cammino.length - 2];
-          nodoCorrente = col.destinazione;
+          nodoCorrente = destinazione;
           passi++;
           if (!cammino.includes(nodoCorrente)) {
             cammino.push(nodoCorrente);
@@ -1476,12 +1772,21 @@ window.addEventListener('resize', allineaColonne);
     aggiornaMappa();
     allineaColonne();
     aggiornaZainoUI();
+    const levelBtn = document.getElementById('level2-btn');
+    if (levelBtn) {
+      levelBtn.style.display = 'block';
+      levelBtn.textContent = 'Livello 1';
+      levelBtn.style.pointerEvents = 'none';
+      levelBtn.style.cursor = 'default';
+      levelBtn.style.opacity = '0.6';
+
+      // Quando viene cliccato (una volta attivato), passa al Livello 2 e attiva dark mode
+      levelBtn.addEventListener('click', () => {
+        if (levelBtn.style.pointerEvents !== 'none') {
+          resetGame(true);
+        }
+      });
+    }
   </script>
 </body>
-  <div id="popup-fessura" class="hidden popup-fessura">
-    <div class="popup-content">
-      <p id="popup-text"></p>
-      <button id="popup-close">Chiudi</button>
-    </div>
-  </div>
 </html>
