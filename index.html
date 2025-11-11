@@ -1465,48 +1465,7 @@ window.addEventListener('resize', allineaColonne);
       // Aggiorna posizione reale dell'omino
       omino.style.transform = `translate(calc(-50% + ${ominoPos.x}px), calc(-50% + ${ominoPos.y}px))`;
 
-      // Controlla collisione con le porte
-      const doors = doorsEl.querySelectorAll(".door");
-      const rectOmino = omino.getBoundingClientRect();
-
-      for (let btn of doors) {
-        const rectDoor = btn.getBoundingClientRect();
-        const overlap = !(
-          rectDoor.right < rectOmino.left ||
-          rectDoor.left > rectOmino.right ||
-          rectDoor.bottom < rectOmino.top ||
-          rectDoor.top > rectOmino.bottom
-        );
-        if (overlap && !isTransitioning && Date.now() > spawnGraceUntil) {
-          isTransitioning = true;
-          const col = grafo[nodoCorrente].collegamenti.find(c => btn.classList.contains(c.direzione));
-          if (col) {
-            const precedente = cammino[cammino.length - 2];
-            const omino = document.getElementById("omino");
-            omino.style.transition = "opacity 0.3s ease";
-            omino.style.opacity = "0.3";
-
-            setTimeout(() => {
-              omino.style.opacity = "1";
-              nodoCorrente = col.destinazione;
-              passi++;
-              if (!cammino.includes(nodoCorrente)) {
-                cammino.push(nodoCorrente);
-              }
-              percorso.push(nodoCorrente);
-              document.getElementById("passi").textContent = passi;
-              const entrySide = (col.direzione === "tunnel") ? "tunnel" : opposto[col.direzione];
-              ominoPos = getSpawnPos(entrySide);
-              spawnGraceUntil = Date.now() + 500;
-              aggiornaStanza();
-              aggiornaMappa();
-              allineaColonne();
-              isTransitioning = false; // unlock after room change
-            }, 500);
-            break;
-          }
-        }
-      }
+      // Controllo collisione con le porte disabilitato
 
       requestAnimationFrame(animate);
     }
